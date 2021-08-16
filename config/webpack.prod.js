@@ -10,8 +10,15 @@ const CompressionPlugin = require('compression-webpack-plugin');
 const BrotliPlugin = require('brotli-webpack-plugin');
 
 module.exports = {
+  /**
+   * Here we declare and name our different Javascript chunks to control
+   * what gets included in each page's bundle.
+   */
   entry: {
-    main: './src/views/index.ts',
+    /** the vendor chunk is package deps */
+    vendor: Object.keys(package.dependencies),
+    /** these point to specific javascript files in views */
+    home: './src/views/index.ts',
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
@@ -38,25 +45,9 @@ module.exports = {
       },
       {
         test: /\.(sa|sc|c)ss$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-          'postcss-loader',
-          'sass-loader',
-        ],
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
       },
-      {
-        test: /\.(png|svg|jpe?g|gif)$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: '[name].[ext]',
-              outputPath: 'assets/',
-            },
-          },
-        ],
-      },
+      { test: /\.svg$/, loader: 'url-loader' },
       {
         test: /\.html$/,
         use: {
@@ -100,10 +91,19 @@ module.exports = {
       filename: '[name].[chunkhash:8].bundle.css',
       chunkFilename: '[name].[chunkhash:8].chunk.css',
     }),
+    /**
+     * In the plugins, we specify different html pages that need to be exposed
+     * as well ass all of the different named chunks that should be included in
+     * that page's bundle.
+     */
     new HtmlWebpackPlugin({
       template: './src/views/index.html',
       filename: 'index.html',
+      chunks: ['vendor', 'home'], // This page includes package deps and the home ts file
     }),
+    /**
+     * These goe after our HTML plugins
+     */
     new CompressionPlugin({
       algorithm: 'gzip',
     }),
