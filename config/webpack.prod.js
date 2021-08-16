@@ -8,6 +8,7 @@ const PurgecssPlugin = require('purgecss-webpack-plugin');
 const glob = require('glob');
 const CompressionPlugin = require('compression-webpack-plugin');
 const BrotliPlugin = require('brotli-webpack-plugin');
+const package = require('../package.json');
 
 module.exports = {
   /**
