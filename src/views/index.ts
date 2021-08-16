@@ -1,32 +1,32 @@
-import { Counter } from '../components';
-import { persist } from '../state';
+import { Icon } from '../components/atoms/Icon';
+import { $ } from '../utils';
+import './index.scss';
 
-/** Configuration Levers */
+function loadFooterImages() {
+  const footer = $('footer');
 
-// How much the timer should increment by each click
-const COUNTER_STEP = 1;
-// The localStorage key to persist the count
-const COUNT_LS_ID = 'counter:demo';
+  if (footer) {
+    // Create icons
+    const githubIcon = Icon('github', { onclick: openGithub });
+    const emailIcon = Icon('email', { onclick: mailTo });
 
-// Counter Component Init
-const counterRef = Counter({
-  DOMID: 'demoCounter',
-  defaultValue: readCount(),
-  step: COUNTER_STEP,
-  effects: [persist(COUNT_LS_ID)],
-});
-
-// On window load...
-window.addEventListener('load', () => {
-  // Render the Counter to the DOM!
-  counterRef.render();
-  // Log the current count
-  console.log('Window loaded! Current count:', counterRef.getCount());
-});
-
-/** Reads the count from localStorage */
-function readCount(): number | undefined {
-  const count = localStorage.getItem(COUNT_LS_ID);
-  if (count === null) return undefined;
-  else return +count;
+    footer.appendChild(githubIcon);
+    footer.appendChild(emailIcon);
+  }
 }
+
+function openGithub() {
+  window.open(`https://github.com/bramirez96`);
+}
+function mailTo() {
+  const EMAIL = 'brandon@brr.dev';
+  const SUBJECT = 'Portfolio Inquiry';
+  window.open(`mailto:${EMAIL}?subject=${SUBJECT}`, '_blank');
+}
+
+/* Code to load page content */
+function pageLoader() {
+  loadFooterImages();
+}
+
+window.addEventListener('load', pageLoader);

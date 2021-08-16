@@ -13,7 +13,6 @@ module.exports = {
     vendor: Object.keys(package.dependencies),
     /** these point to specific javascript files in views */
     home: './src/views/index.ts',
-    page2: './src/views/page2/index.ts',
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
@@ -48,18 +47,7 @@ module.exports = {
         test: /\.(sa|sc|c)ss$/,
         use: ['style-loader', 'css-loader', 'sass-loader'],
       },
-      {
-        test: /\.(png|svg|jpe?g|gif)$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: '[name].[ext]',
-              outputPath: 'assets/',
-            },
-          },
-        ],
-      },
+      { test: /\.svg$/, loader: 'url-loader' },
       {
         test: /\.html$/,
         use: {
@@ -89,11 +77,6 @@ module.exports = {
       template: './src/views/index.html',
       filename: 'index.html',
       chunks: ['vendor', 'home'], // This page includes package deps and the home ts file
-    }),
-    new HtmlWebpackPlugin({
-      template: './src/views/page2/index.html',
-      filename: 'page2/index.html',
-      chunks: ['page2'],
     }),
   ],
 };
